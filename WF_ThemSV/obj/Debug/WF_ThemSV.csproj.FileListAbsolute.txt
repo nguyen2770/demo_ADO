@@ -1,0 +1,10 @@
+D:\WORKSPACE\C#\QLSV\WF_ThemSV\bin\Debug\WF_ThemSV.exe.config
+D:\WORKSPACE\C#\QLSV\WF_ThemSV\bin\Debug\WF_ThemSV.exe
+D:\WORKSPACE\C#\QLSV\WF_ThemSV\bin\Debug\WF_ThemSV.pdb
+D:\WORKSPACE\C#\QLSV\WF_ThemSV\obj\Debug\WF_ThemSV.csproj.AssemblyReference.cache
+D:\WORKSPACE\C#\QLSV\WF_ThemSV\obj\Debug\WF_ThemSV.Form1.resources
+D:\WORKSPACE\C#\QLSV\WF_ThemSV\obj\Debug\WF_ThemSV.Properties.Resources.resources
+D:\WORKSPACE\C#\QLSV\WF_ThemSV\obj\Debug\WF_ThemSV.csproj.GenerateResource.cache
+D:\WORKSPACE\C#\QLSV\WF_ThemSV\obj\Debug\WF_ThemSV.csproj.CoreCompileInputs.cache
+D:\WORKSPACE\C#\QLSV\WF_ThemSV\obj\Debug\WF_ThemSV.exe
+D:\WORKSPACE\C#\QLSV\WF_ThemSV\obj\Debug\WF_ThemSV.pdb

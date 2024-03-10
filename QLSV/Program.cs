@@ -6,6 +6,7 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Collections.Specialized;
 
 namespace QLSV
 {
@@ -20,102 +21,169 @@ namespace QLSV
         {
             string connectionString = ConfigurationManager.ConnectionStrings["QLSV_ConnectionString"].ConnectionString;
 
-            Console.WriteLine("1.Them Sinh vien");
-            Console.WriteLine("2. Hien danh sach sinh vien");
-            Console.WriteLine("3. Xoa dinh vien theo ma");
-            Console.WriteLine("4. Sua Sinh Vien theo ma");
-            Console.Write("Nhap lua chon: ");
-            int key = Convert.ToInt32(Console.ReadLine());
-            switch (key)
+            int key;
+            do
             {
-                case 1:
-                    {
+                Console.WriteLine("1.Them Sinh vien");
+                Console.WriteLine("2. Hien danh sach sinh vien");
+                Console.WriteLine("3. Xoa dinh vien theo ma");
+                Console.WriteLine("4. Sua Sinh Vien theo ma");
+                Console.WriteLine("5. Hien danh sach sinh vien theo pp ngat ket noi");
+                Console.WriteLine("6. Xoa Sinh vien theo phương phap ngat ket noi");
+                Console.WriteLine("7. Them SInh Vien theo pp ngat ket noi");
+                Console.Write("Nhap lua chon: ");
+                key = Convert.ToInt32(Console.ReadLine());
+                switch (key)
+                {
+                    case 1:
+                        {
 
-                        string maSV, hoTen, ngaySinh, diaChi, SDT, gioiTinh;
-                        do {
+                            string maSV, hoTen, ngaySinh, diaChi, SDT, gioiTinh;
+                            do {
+                                Console.Write("Nhap Ma SV: ");
+                                maSV = Console.ReadLine();
+                            } while (KTKhoaChinh_SV(connectionString, maSV));
+
+
+                            Console.Write("Nhap ho ten: ");
+                            hoTen = Console.ReadLine();
+
+                            Console.Write("Nhap ngay sinh: ");
+                            DateTime dateTime = Convert.ToDateTime(Console.ReadLine());
+                            ngaySinh = dateTime.ToString("yyyy/MM/dd");
+
+                            Console.Write("Nhap dia chi: ");
+                            diaChi = Console.ReadLine();
+                            Console.Write("Nhap so dien thoai: ");
+                            SDT = Console.ReadLine();
+                            Console.Write("Nhap gioi tinh: ");
+                            gioiTinh = Console.ReadLine();
+
+                            bool tmp = ThemSV(connectionString, maSV, hoTen, ngaySinh, SDT, diaChi, IsGender(gioiTinh));
+                            if (tmp)
+                            {
+                                Console.WriteLine("Them thanh Cong");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Them Khong thanh cong");
+                            }
+                            break;
+                        }
+                    case 2:
+                        {
+                            HienThiDSSV_tblSinhVien(connectionString);
+                            break;
+                        }
+
+                    case 3:
+                        {
+                            string maSV;
                             Console.Write("Nhap Ma SV: ");
                             maSV = Console.ReadLine();
-                        } while (KTKhoaChinh_SV(connectionString, maSV));
-  
-
-                        Console.Write("Nhap ho ten: ");
-                        hoTen = Console.ReadLine();
-
-                        Console.Write("Nhap ngay sinh: ");
-                        DateTime dateTime = Convert.ToDateTime(Console.ReadLine());
-                        ngaySinh = dateTime.ToString("yyyy/MM/dd");
-
-                        Console.Write("Nhap dia chi: ");
-                        diaChi = Console.ReadLine();
-                        Console.Write("Nhap so dien thoai: ");
-                        SDT = Console.ReadLine();
-                        Console.Write("Nhap gioi tinh: ");
-                        gioiTinh = Console.ReadLine();
-
-                        bool tmp = ThemSV(connectionString, maSV, hoTen, ngaySinh, SDT, diaChi, IsGender(gioiTinh));
-                        if (tmp)
-                        {
-                            Console.WriteLine("Them thanh Cong");
+                            bool tmp = DeleteSV_TheoMA(connectionString, maSV);
+                            if (tmp)
+                            {
+                                Console.WriteLine("Xoa Thanh Cong");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Xoa That Bai");
+                            }
+                            break;
                         }
-                        else
+
+                    case 4:
                         {
-                            Console.WriteLine("Them Khong thanh cong");
+                            string maSV, hoTen, ngaySinh, diaChi, SDT, gioiTinh;
+                            Console.Write("Nhap Ma SV Can Sua: ");
+                            maSV = Console.ReadLine();
+                            Console.Write("Nhap ho ten: ");
+                            hoTen = Console.ReadLine();
+
+                            Console.Write("Nhap ngay sinh: ");
+                            DateTime dateTime = Convert.ToDateTime(Console.ReadLine());
+                            ngaySinh = dateTime.ToString("yyyy/MM/dd");
+
+                            Console.Write("Nhap dia chi: ");
+                            diaChi = Console.ReadLine();
+                            Console.Write("Nhap so dien thoai: ");
+                            SDT = Console.ReadLine();
+                            Console.Write("Nhap gioi tinh: ");
+                            gioiTinh = Console.ReadLine();
+
+                            bool tmp = updateSV_MaSV(connectionString, maSV, hoTen, ngaySinh, diaChi, SDT, IsGender(gioiTinh));
+                            if (tmp)
+                            {
+                                Console.WriteLine("Sua thanh cong");
+                            } else
+                            {
+                                Console.WriteLine("Khong thanh cong");
+                            }
+                            break;
                         }
-                        break;
-                    }
-                case 2:
-                    {
-                        HienThiDSSV_tblSinhVien(connectionString);
-                        break;
-                    }
-
-                case 3:
-                    {
-                        string maSV;
-                        Console.Write("Nhap Ma SV: ");
-                        maSV = Console.ReadLine();
-                        bool tmp = DeleteSV_TheoMA(connectionString, maSV);
-                        if (tmp)
+                    case 5:
                         {
-                            Console.WriteLine("Xoa Thanh Cong");
+                            hienDSSV_NgatKetNoi(connectionString);
+                            break;
                         }
-                        else
+
+                    case 6:
                         {
-                            Console.WriteLine("Xoa That Bai");
+                            string maSV;
+                            Console.Write("Nhap Ma SV: ");
+                            maSV = Console.ReadLine();
+                            bool tmp = xoaSV_TheoMa_NgatKetNoi(connectionString, maSV);
+                            Console.WriteLine(tmp);
+                            if (tmp)
+                            {
+                                Console.WriteLine("Xoa Thanh Cong");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Xoa That Bai");
+                            }
+                            break;
                         }
-                        break;
-                    }
-
-                case 4:
-                    {
-                        string maSV, hoTen, ngaySinh, diaChi, SDT, gioiTinh;
-                        Console.Write("Nhap Ma SV Can Sua: ");
-                        maSV = Console.ReadLine();
-                        Console.Write("Nhap ho ten: ");
-                        hoTen = Console.ReadLine();
-
-                        Console.Write("Nhap ngay sinh: ");
-                        DateTime dateTime = Convert.ToDateTime(Console.ReadLine());
-                        ngaySinh = dateTime.ToString("yyyy/MM/dd");
-
-                        Console.Write("Nhap dia chi: ");
-                        diaChi = Console.ReadLine();
-                        Console.Write("Nhap so dien thoai: ");
-                        SDT = Console.ReadLine();
-                        Console.Write("Nhap gioi tinh: ");
-                        gioiTinh = Console.ReadLine();
-
-                        bool tmp = updateSV_MaSV(connectionString, maSV, hoTen, ngaySinh, diaChi, SDT, IsGender(gioiTinh));
-                        if (tmp)
+                    case 7:
                         {
-                            Console.WriteLine("Sua thanh cong");
-                        }else
-                        {
-                            Console.WriteLine("Khong thanh cong");
+                            string maSV, hoTen, ngaySinh, diaChi, SDT, gioiTinh;
+                            do
+                            {
+                                Console.Write("Nhap Ma SV: ");
+                                maSV = Console.ReadLine();
+                            } while (KTKhoaChinh_SV(connectionString, maSV));
+
+
+                            Console.Write("Nhap ho ten: ");
+                            hoTen = Console.ReadLine();
+
+                            Console.Write("Nhap ngay sinh: ");
+                            DateTime dateTime = Convert.ToDateTime(Console.ReadLine());
+                            ngaySinh = dateTime.ToString("yyyy/MM/dd");
+
+                            Console.Write("Nhap dia chi: ");
+                            diaChi = Console.ReadLine();
+                            Console.Write("Nhap so dien thoai: ");
+                            SDT = Console.ReadLine();
+                            Console.Write("Nhap gioi tinh: ");
+                            gioiTinh = Console.ReadLine();
+
+                            bool tmp = ThemSV_NgatKetNoi(connectionString, maSV, hoTen, ngaySinh, SDT, diaChi, IsGender(gioiTinh));
+                            if (tmp)
+                            {
+                                Console.WriteLine("Them thanh Cong");
+                            }
+                            else
+                            {
+                                Console.WriteLine("Them Khong thanh cong");
+                            }
+                            break;
                         }
-                        break;
-                    }
-            }
+
+                }
+
+            } while (key != 0);
 
             Console.ReadKey();
         }
@@ -146,7 +214,7 @@ namespace QLSV
                     sqlCommand.Parameters.AddWithValue("@gioiTinh", GT);
 
 
-
+                    
                     sqlConnection.Open();
                         int i = sqlCommand.ExecuteNonQuery();
                     sqlConnection.Close();
@@ -270,6 +338,155 @@ namespace QLSV
                     int i = cmd.ExecuteNonQuery();
                     sqlConnection.Close ();
                     return i > 0;
+                }
+            }
+        }
+
+        private static void hienDSSV_NgatKetNoi(string connectionstring)
+        {
+            string select_proc = "Select_tblSINHVIEN";
+            using(SqlConnection sqlConnection = new SqlConnection(connectionstring))
+            {
+                using (SqlCommand cmd = new SqlCommand()) { 
+                    cmd.Connection = sqlConnection;
+                    cmd.CommandText = select_proc;
+                    cmd.CommandType= CommandType.StoredProcedure;
+                    using(SqlDataAdapter adapter = new SqlDataAdapter())
+                    {
+                        adapter.SelectCommand = cmd;
+                        using(DataTable table = new DataTable())
+                        {
+                            adapter.Fill(table);
+                            if(table.Rows.Count > 0)
+                            {
+                                using (DataView dataView = table.DefaultView)
+                                {
+                                    dataView.RowFilter = "bGioiTinh = false";
+                                    dataView.Sort = "dNgaySinh ASC";
+
+                                    foreach (DataRowView row in dataView)
+                                    {
+                                        Console.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}",
+                                        row["sMaSV"],
+                                        row["sHoTen"],
+                                        row["dNgaySinh"],
+                                        row["sDiaChi"],
+                                        row["sSoDienThoai"],
+                                        row["bGioiTinh"]);
+                                    }
+                                }
+                                    /*HIển thị dữ liệu ra màn hình*/
+                                    /*foreach (DataRow row in table.Rows)
+                                    {
+                                        Console.WriteLine("{0}\t{1}\t{2}\t{3}\t{4}\t{5}",
+                                        row["sMaSV"],
+                                        row["sHoTen"],
+                                        row["dNgaySinh"],
+                                        row["sDiaChi"],
+                                        row["sSoDienThoai"],
+                                        row["bGioiTinh"]);
+                                    }*/
+                            }
+                            else
+                            {
+                                Console.WriteLine("Khong taon tai ban ghi nao");
+                            }
+                        }
+
+                    }
+                
+                }
+            }
+        }
+
+        private static bool xoaSV_TheoMa_NgatKetNoi(string connectionString, string maSV) {
+            string delete_proc = "sp_XoaSinhVien";
+            string select_proc = "Select_tblSINHVIEN";
+            using(SqlConnection connection = new SqlConnection(connectionString)) { 
+                using(SqlCommand  cmd = new SqlCommand())
+                {
+                    cmd.Connection = connection;
+                    cmd.CommandText = select_proc;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    using(SqlDataAdapter  adapter = new SqlDataAdapter())
+                    {
+                        adapter.SelectCommand = cmd;
+                        using (DataTable tblSinhVien = new DataTable("tblSINHVIEN"))
+                        {
+                            adapter.Fill(tblSinhVien);
+                            using (DataSet dataSet = new DataSet())
+                            {
+                                dataSet.Tables.Add(tblSinhVien);
+
+                                // tìm mã sinh viên cần xóa
+                                tblSinhVien.PrimaryKey = new DataColumn[] {tblSinhVien.Columns["sMaSV"]};
+                                DataRow row = tblSinhVien.Rows.Find(maSV);
+                                row.Delete();
+
+                                // đồng bộ dữ liệu lên cơ sở dữ liệu sd deleteCommand
+                                cmd.CommandText = delete_proc;
+                                cmd.Parameters.Clear(); // clear đi để không bị chồng dữ liệu
+                                cmd.Parameters.AddWithValue("@MaSV", maSV);
+
+                                adapter.DeleteCommand = cmd;
+                                int i = adapter.Update(dataSet, "tblSinhVien");
+
+                                return i > 0;
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
+        private static bool ThemSV_NgatKetNoi(string connectionstring, string maSV, string hoTen, string ngaySinh, string DC, string SDT, bool GT)
+        {
+            string select_proc = "Select_tblSINHVIEN";
+            string insert_proc = "Insert_tblSINHVIEN";
+            using (SqlConnection conn = new SqlConnection(connectionstring))
+            {
+                using(SqlCommand cmd = conn.CreateCommand())
+                {
+                    using(SqlDataAdapter adapter = new SqlDataAdapter())
+                    {
+                        cmd.CommandText = select_proc;
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        adapter.SelectCommand = cmd;
+                        using(DataTable tblSinhVien = new DataTable("tblSINHVIEN"))
+                        {
+                            adapter.Fill(tblSinhVien);
+                            using(DataSet dsSinhVien = new DataSet())
+                            {
+                                dsSinhVien.Tables.Add(tblSinhVien);
+
+                                // thêm sinh viên vào dataTable
+                                DataRow row = tblSinhVien.NewRow();
+                                row["sMaSV"] = maSV;
+                                row["sHoTen"] = hoTen;
+                                row["dNgaySinh"] = ngaySinh;
+                                row["sDiaChi"] = DC;
+                                row["sSoDienThoai"] = SDT;
+                                row["bGioiTinh"] = GT;
+                                tblSinhVien.Rows.Add(row);
+
+                                // đồng bộ dữ liệu vào CSDL
+                                cmd.Parameters.Clear();
+                                cmd.CommandText = insert_proc;
+                                cmd.Parameters.AddWithValue("@maSV", maSV);
+                                cmd.Parameters.AddWithValue("@tenSV", hoTen);
+                                cmd.Parameters.AddWithValue("@ngaySinh", ngaySinh);
+                                cmd.Parameters.AddWithValue("@diaChi", DC);
+                                cmd.Parameters.AddWithValue("@soDienThoai", SDT);
+                                cmd.Parameters.AddWithValue("@gioiTinh", GT);
+
+                                adapter.InsertCommand = cmd;
+                                int i = adapter.Update(dsSinhVien,"tblSINHVIEN");
+
+                                return i > 0;
+
+                            }
+                        }
+                    }
                 }
             }
         }
